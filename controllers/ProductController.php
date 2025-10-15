@@ -48,10 +48,10 @@ class ProductController extends Controller
                 'defaultOrder' => [
                     'id' => SORT_DESC,
                 ],
-                'attributes' => [
-                    'name',
-                    'products'
-                    ]
+//                'attributes' => [
+//                    'name',
+//                    //'products'
+//                    ]
             ],
 
         ]);

@@ -29,7 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'name',
-            ['label' => 'Products',
+            [
+                    'attribute' => 'products',
+                'label' => 'Products',
                 'value' => function ($model) {
                     $products = Product::find()->where(['category_id' => $model->id])->orderBy(['name' => SORT_ASC])->all();
 
@@ -39,7 +41,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
 
                     return \implode(', ', $aNames);
-                }
+                },
+                'class' => 'yii\grid\DataColumn',
+                'sortLinkOptions' => [
+                    ['class' => 'text-nowrap'],
+                    null,
+                ],
+                'enableSorting' => true, // Позволяет сортировать по колонке 'name'
+//                'class' => 'common\components\grid\CombinedDataColumn',
+//                'labelTemplate' => '{0}  /  {1}',
+//                'valueTemplate' => '{0}  /  {1}',
+//                'labels' => [
+//                    'Created At',
+//                    '[ Updated At ]',
+//                ],
             ],
             [
                 'class' => ActionColumn::className(),

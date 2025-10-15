@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Category;
 use app\models\Product;
 use yii\data\ActiveDataProvider;
+use yii\data\Sort;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -39,16 +40,29 @@ class CategoryController extends Controller
      */
     public function actionIndex()
     {
-        $query = Category::find();
+        $query = Category::find()->joinWith('products');
 
         //$query->joinWith(['products' => function($query) { $query->from(['product' => 'users']); }]);
 
+        $sort = new Sort([
+            'defaultOrder' => [
+                'id' => SORT_DESC,
+            ],
+//            'attributes' => [
+//                'constituency',
+////                'count' => [
+////                    'asc' => 'products.name ASC',
+////                    'desc' => 'products.name DESC',
+////                ],
+//            ],
+        ]);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-
             'pagination' => [
                 'pageSize' => 50
             ],
+            //'sort' => $sort
             'sort' => [
                 'defaultOrder' => [
                     'id' => SORT_DESC,
@@ -56,10 +70,28 @@ class CategoryController extends Controller
                 'attributes' => [
                     //'name',
                     //'products'
+//                    'products' => [ // Example of a custom field not directly mapped to a column
+////                        'asc' => 'products.name ASC',
+////                        'desc' => 'products.name DESC',
+//                    ],
                 ]
-            ],
-
+            ]
         ]);
+
+        $dataProvider->sort->attributes['products'] = [
+            'asc' => [
+                //new \yii\db\Expression("FIELD(login, 'finance', 'admin') DESC"),
+                new \yii\db\Expression("products.name ASC"),
+                'id' => SORT_ASC,
+            ],
+            'desc' => [
+                new \yii\db\Expression("products.name DESC"),
+                'id' => SORT_DESC,
+            ],
+            'label' => 'ID', // $searchModel->getAttributeLabel('id')
+        ];
+
+        $dataProvider->sort->defaultOrder = ['id' => SORT_ASC];
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
