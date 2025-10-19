@@ -40,7 +40,11 @@ class CategoryController extends Controller
      */
     public function actionIndex()
     {
-        $query = Category::find()->joinWith('products');
+        $query = Category::find()
+            ->joinWith('products')
+            //->select(['categories.*', 'products.*'])
+            ->groupBy('id')
+        ;
 
         //$query->joinWith(['products' => function($query) { $query->from(['product' => 'users']); }]);
 
@@ -82,11 +86,11 @@ class CategoryController extends Controller
             'asc' => [
                 //new \yii\db\Expression("FIELD(login, 'finance', 'admin') DESC"),
                 new \yii\db\Expression("products.name ASC"),
-                'id' => SORT_ASC,
+                //'id' => SORT_ASC,
             ],
             'desc' => [
                 new \yii\db\Expression("products.name DESC"),
-                'id' => SORT_DESC,
+                //'id' => SORT_DESC,
             ],
             'label' => 'ID', // $searchModel->getAttributeLabel('id')
         ];
